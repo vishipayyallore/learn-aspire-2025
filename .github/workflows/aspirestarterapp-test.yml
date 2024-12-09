@@ -7,11 +7,13 @@ on:
       - main
     paths:
       - "src/AspireStarterApp"
+      - ".github/workflows/aspirestarterapp-test.yml"
   pull_request:
     branches:
       - main
     paths:
       - "src/AspireStarterApp"
+      - ".github/workflows/aspirestarterapp-test.yml"
 
 jobs:
   build-and-test:
