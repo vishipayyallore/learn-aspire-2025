@@ -1,0 +1,78 @@
+# GitHub Actions workflow to deploy to Azure using azd
+# To configure required secrets for connecting to Azure, simply run `azd pipeline config`
+
+name: AspireStarterApp Build, Test and Deploy to Azure
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/AspireStarterApp"
+      - ".github/workflows/aspirestarterapp-test.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "src/AspireStarterApp"
+      - ".github/workflows/aspirestarterapp-test.yml"
+
+# Set up permissions for deploying with secretless Azure federated credentials
+# https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Clinux#set-up-azure-login-with-openid-connect-authentication
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+  AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME }}
+  AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
+  AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+  AZD_ALPHA_ENABLE_RESOURCEGROUPDEPLOYMENTS: "true"
+
+defaults:
+  run:
+    working-directory: ./src/AspireStarterApp/AspireStarterApp.AppHost
+
+jobs:
+  build-and-test:
+    uses: ./.github/workflows/shared-test.yml
+    with:
+      project-name: AspireStarterApp
+      solution-path: src/AspireStarterApp/AspireStarterApp.sln
+
+  deploy-infrastructure-and-app:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install azd
+        uses: Azure/setup-azd@v1.0.0
+
+      - name: Install .NET Aspire workload
+        run: dotnet workload install aspire
+
+      - name: Log in with Azure (Federated Credentials)
+        if: ${{ env.AZURE_CLIENT_ID != '' }}
+        run: |
+          azd auth login --client-id ${{ env.AZURE_CLIENT_ID }} --federated-credential-provider "github" --tenant-id ${{ env.AZURE_TENANT_ID }}
+        shell: pwsh
+
+      - name: Print Environment Variables
+        run: env
+
+      - name: Set environment variables
+        run: echo "AZURE_LOCATION=eastus" >> $GITHUB_ENV
+
+      - name: Provision Infrastructure
+        run: azd provision --no-prompt
+
+      - name: Deploy Application to Azure
+        run: azd deploy --no-prompt
