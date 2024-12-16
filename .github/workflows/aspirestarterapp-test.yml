@@ -1,4 +1,7 @@
-name: AspireStarterApp Test
+# GitHub Actions workflow to deploy to Azure using azd
+# To configure required secrets for connecting to Azure, simply run `azd pipeline config`
+
+name: AspireStarterApp Build, Test and Deploy to Azure
 
 on:
   workflow_dispatch:
@@ -14,6 +17,22 @@ on:
     paths:
       - "src/AspireStarterApp"
       - ".github/workflows/aspirestarterapp-test.yml"
+
+# Set up permissions for deploying with secretless Azure federated credentials
+# https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Clinux#set-up-azure-login-with-openid-connect-authentication
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+  AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME }}
+  AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
+  AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+  AZD_ALPHA_ENABLE_RESOURCEGROUPDEPLOYMENTS: "true"
 
 jobs:
   build-and-test:
