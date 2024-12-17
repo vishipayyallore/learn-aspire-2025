@@ -9,13 +9,13 @@ on:
     branches:
       - main
     paths:
-      - "src/AspireStarterApp"
+      - "src/AspireStarterApp/**"
       - ".github/workflows/aspirestarterapp-test.yml"
   pull_request:
     branches:
       - main
     paths:
-      - "src/AspireStarterApp"
+      - "src/AspireStarterApp/**"
       - ".github/workflows/aspirestarterapp-test.yml"
 
 # Set up permissions for deploying with secretless Azure federated credentials
