@@ -78,3 +78,8 @@ jobs:
           name: code-coverage-${{ inputs.project-name }}
           path: TestResults-${{ inputs.project-name }}/**/*.xml
         if: always()
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
