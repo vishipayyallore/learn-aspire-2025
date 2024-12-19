@@ -1,7 +1,7 @@
 # GitHub Actions workflow to deploy to Azure using azd
 # To configure required secrets for connecting to Azure, simply run `azd pipeline config`
 
-name: AspireStarterApp Build, Test and Deploy to Azure
+name: Deploy AspireStarterApp solution to Azure
 
 on:
   workflow_dispatch:
