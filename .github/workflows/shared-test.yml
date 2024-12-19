@@ -32,6 +32,9 @@ jobs:
       - name: Restore NuGet Packages
         run: dotnet restore ${{ inputs.solution-path }}
 
+      - name: Build the solution
+        run: dotnet build ${{ inputs.solution-path }} --no-restore
+
       - name: Run unit tests for matching projects
         shell: bash
         run: |
@@ -40,7 +43,7 @@ jobs:
             echo "Running tests for $testProject"
             resultsDir="TestResults-${{ inputs.project-name }}/$(basename $testProject .csproj)"
             mkdir -p "$resultsDir"
-            dotnet test "$testProject" --logger trx --results-directory "$resultsDir" --no-restore
+            dotnet test "$testProject" --logger trx --results-directory "$resultsDir" --no-restore --no-build
           done
 
       - name: Upload the test results
