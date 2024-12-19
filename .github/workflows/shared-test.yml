@@ -49,9 +49,7 @@ jobs:
 
             # Execute dotnet test and capture exit code
             dotnet test "$testProject" --logger trx --results-directory "$resultsDir" --no-restore --no-build --collect:"XPlat Code Coverage" \
-              /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput="$coverageDir/coverage.cobertura.xml" \
-              /p:CollectCoverageResults="$coverageDir" /p:CoverletOutputFormat=opencover /p:CoverletOutput="${coverageDir}/coverage.opencover.xml" \ 
-              /p:CoverletOutputFormat=json /p:CoverletOutput="${coverageDir}/coverage.json" 
+              /p:CollectCoverage=true /p:CoverletOutputFormat="cobertura,opencover,json" /p:CoverletOutput="$coverageDir/coverage" 
             test_result=$?
 
             # Check for test execution errors
@@ -64,10 +62,10 @@ jobs:
             fi 
           done
 
-      - name: Upload all test artifacts
+      - name: Upload the test results
         uses: actions/upload-artifact@v4
         with:
-          name: test-artifacts-${{ inputs.project-name }}
+          name: test-results-${{ inputs.project-name }}
           path: TestResults-${{ inputs.project-name }}
         if: always()
 
@@ -75,5 +73,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: code-coverage-${{ inputs.project-name }}
-          path: TestResults-${{ inputs.project-name }}/**/CoverageResults/**/*.xml
+          path: TestResults-${{ inputs.project-name }}/**/CoverageResults/*.xml
         if: always()
