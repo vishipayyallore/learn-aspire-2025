@@ -29,14 +29,8 @@ jobs:
         with:
           dotnet-version: ${{ inputs.dotnet-version }}
 
-      - name: Install .NET Aspire workload
-        run: dotnet workload install aspire
-
       - name: Restore NuGet Packages
         run: dotnet restore ${{ inputs.solution-path }}
-
-      # - name: Run unit tests
-      #   run: dotnet test --logger trx --results-directory "TestResults-${{ inputs.project-name}}" --no-restore ${{ inputs.solution-path }}
 
       - name: Run unit tests for matching projects
         shell: bash
