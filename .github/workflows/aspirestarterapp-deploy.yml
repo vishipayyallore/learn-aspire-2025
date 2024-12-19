@@ -39,6 +39,7 @@ defaults:
 jobs:
   build-and-test:
     uses: ./.github/workflows/shared-test.yml
+    secrets: inherit
     with:
       project-name: AspireStarterApp
       solution-path: src/AspireStarterApp/AspireStarterApp.sln
