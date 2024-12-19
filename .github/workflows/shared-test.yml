@@ -49,7 +49,7 @@ jobs:
 
             # Execute dotnet test and capture exit code
             dotnet test "$testProject" --logger trx --results-directory "$resultsDir" --no-restore --no-build --collect:"XPlat Code Coverage" \
-              /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput="$coverageDir/coverage.cobertura.xml"
+              /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput="$coverageDir/coverage.cobertura.xml" 
             test_result=$?
 
             # Check for test execution errors
