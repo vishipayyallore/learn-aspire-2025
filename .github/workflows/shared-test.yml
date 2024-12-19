@@ -47,19 +47,22 @@ jobs:
             mkdir -p "$resultsDir"
             mkdir -p "$coverageDir"
 
-            # Execute dotnet test and capture exit code
-            dotnet test "$testProject" --logger trx --results-directory "$resultsDir" --no-restore --no-build --collect:"XPlat Code Coverage" \
-              /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput="$coverageDir/coverage.cobertura.xml"
-            test_result=$?
-
-            # Check for test execution errors
-            if [ $test_result -ne 0 ]; then
-              echo "Tests for $testProject failed."
-              # Optionally log detailed test output to a file
-              echo "Test output for $testProject:" >> test-output.log
-              dotnet test "$testProject" >> test-output.log 2>&1
-              exit 1  # Exit the workflow if any test fails
-            fi 
+            # Execute dotnet test for each format and capture exit code
+            for format in cobertura opencover json; do
+              dotnet test "$testProject" --logger trx --results-directory "$resultsDir" --no-restore --no-build --collect:"XPlat Code Coverage" \
+                /p:CollectCoverage=true \
+                /p:CoverletOutput="$coverageDir/coverage.$format" \
+                /p:CoverletOutputFormat=$format
+              test_result=$?
+              
+              if [ $test_result -ne 0 ]; then
+                echo "Tests for $testProject failed in $format format."
+                # Optionally log detailed test output to a file
+                echo "Test output for $testProject ($format):" >> test-output.log
+                dotnet test "$testProject" >> test-output.log 2>&1
+                exit 1  # Exit the workflow if any test fails
+              fi
+            done
           done
 
       - name: Upload the test results
@@ -73,5 +76,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: code-coverage-${{ inputs.project-name }}
-          path: TestResults-${{ inputs.project-name }}/**/CoverageResults
+          path: TestResults-${{ inputs.project-name }}/**/*.xml
         if: always()
