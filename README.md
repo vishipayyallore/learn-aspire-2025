@@ -4,6 +4,12 @@ I am learning .NET Aspire from different Video Courses, Books, and Websites
 
 ## Badges
 
+### Build
+
+[![Deploy AspireStarterApp solution to Azure](https://github.com/vishipayyallore/learn-aspire-2025/actions/workflows/aspirestarterapp-deploy.yml/badge.svg)](https://github.com/vishipayyallore/learn-aspire-2025/actions/workflows/aspirestarterapp-deploy.yml)
+
+### Code Coverage
+
 [![codecov](https://codecov.io/github/vishipayyallore/learn-aspire-2025/graph/badge.svg?token=ZIBO5V36ZQ)](https://codecov.io/github/vishipayyallore/learn-aspire-2025)
 
 ## Prepare Aspire Project for deployment
