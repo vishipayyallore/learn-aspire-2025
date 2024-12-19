@@ -1,4 +1,4 @@
-name: Build and Test a .NET project
+name: Build, Test, and Generate Code Coverage for a .NET project
 
 on:
   workflow_call:
@@ -16,6 +16,7 @@ on:
         required: false
         type: string
         default: "8.0.x"
+
 jobs:
   run-test:
     runs-on: ubuntu-latest
@@ -35,7 +36,7 @@ jobs:
       - name: Build the solution
         run: dotnet build ${{ inputs.solution-path }} --no-restore
 
-      - name: Run unit tests for matching projects
+      - name: Run unit tests and generate code coverage
         shell: bash
         run: |
           # Find test projects matching *.Tests.csproj
@@ -43,7 +44,7 @@ jobs:
             echo "Running tests for $testProject"
             resultsDir="TestResults-${{ inputs.project-name }}/$(basename $testProject .csproj)"
             mkdir -p "$resultsDir"
-            dotnet test "$testProject" --logger trx --results-directory "$resultsDir" --no-restore --no-build
+            dotnet test "$testProject" --logger trx --results-directory "$resultsDir" --no-restore --no-build --collect:"XPlat Code Coverage" --coverlet:"OutputFormat=cobertura;TargetDirectory=./CoverageResults"
           done
 
       - name: Upload the test results
@@ -51,4 +52,11 @@ jobs:
         with:
           name: test-results-${{ inputs.project-name}}
           path: TestResults-${{ inputs.project-name}}
+        if: always()
+
+      - name: Upload code coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-coverage-${{ inputs.project-name}}
+          path: ./CoverageResults
         if: always()
