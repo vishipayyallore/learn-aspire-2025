@@ -7,8 +7,6 @@ on:
   push:
     branches: 
       - main
-    paths:
-      - ".github/workflows/aspirestarterapp-test.yml"
   workflow_dispatch:
 
 # Set up permissions for deploying with secretless Azure federated credentials
