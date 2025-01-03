@@ -12,6 +12,12 @@ I am learning .NET Aspire from different Video Courses, Books, and Websites
 
 [![codecov](https://codecov.io/github/vishipayyallore/learn-aspire-2025/graph/badge.svg?token=ZIBO5V36ZQ)](https://codecov.io/github/vishipayyallore/learn-aspire-2025)
 
+## Few Commands
+
+```powershell
+dotnet workload list
+```
+
 ## Prepare Aspire Project for deployment
 
 ```powershell
