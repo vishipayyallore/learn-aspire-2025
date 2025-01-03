@@ -7,9 +7,6 @@ on:
   workflow_dispatch:
 
   push:
-    paths:
-      - "src/AspireStarterApp/**"
-
     branches:
       - main
 
