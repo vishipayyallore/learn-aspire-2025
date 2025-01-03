@@ -5,8 +5,10 @@ name: Deploy AspireStarterApp solution to Azure
 
 on:
   push:
-    branches: 
+    branches:
       - main
+    paths:
+      - "AspireStarterApp/**"
   workflow_dispatch:
 
 # Set up permissions for deploying with secretless Azure federated credentials
