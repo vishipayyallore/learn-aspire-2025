@@ -5,12 +5,8 @@ name: Deploy AspireStarterApp solution to Azure
 
 on:
   push:
-    branches: [main]
-    paths:
-      - "./src/AspireStarterApp/**"
-      - ".github/workflows/aspirestarterapp-test.yml"
-  pull_request:
-    branches: [main]
+    branches: 
+      - main
     paths:
       - "./src/AspireStarterApp/**"
       - ".github/workflows/aspirestarterapp-test.yml"
