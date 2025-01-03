@@ -4,17 +4,17 @@
 name: Deploy AspireStarterApp solution to Azure
 
 on:
-  workflow_dispatch:
   push:
     branches: [main]
     paths:
-      - "src/AspireStarterApp/**"
+      - "./src/AspireStarterApp/**"
       - ".github/workflows/aspirestarterapp-test.yml"
   pull_request:
     branches: [main]
     paths:
-      - "src/AspireStarterApp/**"
+      - "./src/AspireStarterApp/**"
       - ".github/workflows/aspirestarterapp-test.yml"
+  workflow_dispatch:
 
 # Set up permissions for deploying with secretless Azure federated credentials
 # https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Clinux#set-up-azure-login-with-openid-connect-authentication
