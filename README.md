@@ -16,11 +16,8 @@ I am learning .NET Aspire from different Video Courses, Books, and Websites
 
 ```powershell
 dotnet workload list
-
 dotnet new list
-
 dotnet new aspire-starter --help
-
 dotnet new aspire-starter -o AspireSample
 ```
 
